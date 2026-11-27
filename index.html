@@ -807,8 +807,8 @@ setInterval(renderPtsTick,1000);
 function renderMine(){const n=owned.reduce((a,o)=>a+o.q,0),hp=owned.reduce((a,o)=>a+o.q*T[o.i].hp,0);
  const labs=$$('#mineSec .stat span');
  if(api){labs[1].textContent=t('mine.stLabel');labs[2].textContent=t('mine.dayLabel');labs[3].textContent=api.phase==='live'?t('mine.availLabel'):t('mine.ptsLabel');
-  $('#mCount').textContent=n;$('#mSt').textContent=f1(api.stakedHashpower);$('#mDay').textContent=f1(Number(api.perDay));renderPtsTick();
-  $('#rebLine').textContent=t('reb.line',{r:f1(toU(rebate)),n:api.directCount});$('#rebLine').hidden=false;$('#mineTip').textContent=t('mine.api');
+  $('#mCount').textContent=n;$('#mSt').textContent=(Number(api.stakedHashpower)+(api.bonusActive?Number(api.bonusHashpower||0):0)).toLocaleString('en-US',{maximumFractionDigits:2});$('#mDay').textContent=f1(Number(api.perDay));renderPtsTick();
+  $('#rebLine').textContent=t('reb.line',{r:f1(toU(rebate)),n:api.directCount,b:Number(api.bonusHashpower||0).toLocaleString('en-US',{maximumFractionDigits:2})+(api.bonusHashpower>0&&!api.bonusActive?t('bonus.off'):'')});$('#rebLine').hidden=false;$('#mineTip').textContent=t('mine.api');
   const anyFree=api.cards.some(c=>!c.staked);$('#stake').disabled=stakeBusy||!api.cards.length||api.status==='frozen';$('#stake').textContent=api.status==='frozen'?t('frozen'):(anyFree||!api.cards.length)?t('mine.stakeAll'):t('mine.unstakeAll')}
  else{$('#mCount').textContent=n;$('#mSt').textContent=f1(hp);$('#mDay').textContent=f1(day(hp));$('#mPts').textContent=f1(toU(rebate));$('#stake').disabled=true;$('#stake').textContent=t('mine.stake')}
  $('#owned').innerHTML=mineLoading?`<div class="empty">${t('loadingMine')}</div>`:owned.length?owned.flatMap(o=>Array.from({length:Math.min(o.q,8)},(_,k)=>card(T[o.i],o.i,'div',k<o.st))).join(''):`<div class="empty">${t('mine.empty')}</div>`}
@@ -925,6 +925,10 @@ Object.assign(I.en,{
  'err.rejected':'Cancelled','err.balance':'Not enough USDT','err.gas':'Not enough BNB for gas','err.noWallet':'No wallet found. Open in TokenPocket, Binance Wallet or MetaMask.','err.generic':'Something went wrong. Try again.',
  'stake.sign':'Sign in your wallet. No gas.','stake.ok':'Staked. Points are rolling.','unstake.ok':'Unstaked.','copied':'Copied','demo':'© 2026 CowCow · BNB Chain'
 });
+Object.assign(I.zh,{'reb.line':'已赚 {r} USDT · 邀请 {n} 人 · 加成 +{b} 算力','bonus.off':'（质押节点后生效）','mine.note':'邀请好友铸造：10% USDT 秒到账，再拿 5% 算力加成。'});
+Object.assign(I.en,{'reb.line':'{r} USDT earned · {n} referrals · +{b} bonus hashpower','bonus.off':' (active once you stake)','mine.note':'Invite friends: 10% in USDT instantly, plus a 5% hashpower boost.'});
+WP.zh.secs.find(x=>x.id==='w6').b[0][1].splice(2,0,'邀请加成：好友每铸造一枚节点，你永久获得其算力 5% 的加成。至少质押 1 枚节点时生效。');
+WP.en.secs.find(x=>x.id==='w6').b[0][1].splice(2,0,'Referral boost: every node a friend mints gives you a permanent 5% of its hashpower. Active while you have at least one node staked.');
 const route=()=>{const wp=location.hash==='#whitepaper';$('#vSale').hidden=wp;$('#vWp').hidden=!wp;$('#tSale').classList.toggle('on',!wp);$('#tWp').classList.toggle('on',wp);window.scrollTo(0,0)};
 addEventListener('hashchange',route);
 
