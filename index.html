@@ -282,6 +282,56 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0b0e11;color:#fff;padding:12px 18px;border-radius:14px;font-size:14px;z-index:60;max-width:90vw;text-align:center}
 .toast[hidden],[hidden]{display:none !important}
 input:disabled{background:rgba(255,255,255,.6);color:var(--mute)}
+/* 生态玩法图标 */
+.eco{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+.eco div{display:grid;justify-items:center;gap:10px;padding:20px 8px;background:rgba(255,255,255,.7);border-radius:22px;transition:transform .25s}
+.eco div:hover{transform:translateY(-4px)}
+.eco .ic{width:58px;height:58px;border-radius:18px;background:#0b0e11;color:#FCD535;display:grid;place-items:center;box-shadow:0 10px 22px -8px rgba(11,14,17,.6)}
+.eco .ic svg{width:30px;height:30px}
+.eco b{font-size:15px}
+.uses .ic{width:40px;height:40px;border-radius:12px;background:#0b0e11;color:#FCD535;display:grid;place-items:center;margin-bottom:8px}
+.uses .ic svg{width:22px;height:22px}
+@media(max-width:760px){.eco{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.eco div{padding:14px 4px}.eco .ic{width:48px;height:48px;border-radius:15px}.eco .ic svg{width:26px;height:26px}.eco b{font-size:14px}}
+/* 认购成功动画 */
+.sheet{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;transition:background .5s,color .5s}
+.sheet>*{position:relative;z-index:1}
+.sheet .rays,.sheet .burst,.sheet .fx{position:absolute;z-index:0;pointer-events:none}
+.rays{left:50%;top:34%;width:620px;height:620px;margin:-310px 0 0 -310px;opacity:0;background:repeating-conic-gradient(from 0deg,rgba(252,213,53,.32) 0deg 5deg,transparent 5deg 15deg);-webkit-mask:radial-gradient(circle,#000 0,transparent 60%);mask:radial-gradient(circle,#000 0,transparent 60%)}
+.burst{left:50%;top:34%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:3px solid #FCD535;opacity:0}
+.fx{inset:0}
+.fx i{position:absolute;left:50%;top:34%;width:8px;height:8px;margin:-4px;border-radius:2px;opacity:0;animation:pop var(--t,1.2s) var(--d,.6s) cubic-bezier(.15,.7,.3,1) forwards}
+@keyframes pop{0%{opacity:1;transform:translate(0,0) rotate(0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--r)) scale(.6)}}
+.sheet.win{background:radial-gradient(120% 85% at 50% 30%,#4a3b06 0%,#1a160b 42%,#0b0e11 72%);color:#fff}
+.sheet.win .note{color:#cfc7a6}
+.sheet.win #mt{color:#FCD535;font-size:28px;margin-top:4px}
+.sheet.win .flip{order:-1;margin:18px auto 14px;animation:rise 1s cubic-bezier(.2,.9,.25,1.15) both}
+.sheet.win .rays{animation:raysIn .9s ease-out forwards,spin 16s linear infinite}
+.sheet.win .burst{animation:burst 1.1s .7s ease-out forwards}
+.sheet.win .burst.b2{animation:burst 1.3s .95s ease-out forwards}
+.sheet.win #mt,.sheet.win #msub{animation:fadeUp .6s 1.25s both}
+.sheet.win #txLink{color:#cfc7a6 !important;font-size:12px}
+.sheet.win .btn:not(.y){background:transparent;color:#fff;border-color:rgba(255,255,255,.3)}
+.inner{transform:rotateY(900deg);transition:transform 1.7s cubic-bezier(.12,.82,.22,1)}
+.inner.go{transform:rotateY(0)}
+.sheet.win .inner.go .face{box-shadow:0 0 0 2px rgba(252,213,53,.7),0 0 70px rgba(252,213,53,.55),0 24px 48px -12px rgba(0,0,0,.6);transition:box-shadow .6s 1.4s}
+.sheet.win .inner.go .shine{animation:sweep 1.4s 1.5s ease-in-out 2 alternate}
+@keyframes rise{0%{opacity:0;transform:scale(.35) translateY(40px);filter:blur(8px)}55%{opacity:1;filter:blur(0)}75%{transform:scale(1.07)}100%{transform:scale(1)}}
+@keyframes raysIn{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
+@keyframes spin{to{rotate:360deg}}
+@keyframes burst{0%{opacity:.95;transform:scale(.2)}100%{opacity:0;transform:scale(10)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.sheet.win .rays,.sheet.win .burst,.fx i,.sheet.win .flip{animation:none}.inner{transition:none}}
+.eco div{background:#0b0e11 !important;border-radius:24px !important;padding:22px 8px 18px !important;position:relative;overflow:hidden;gap:12px !important;box-shadow:0 14px 30px -14px rgba(11,14,17,.7)}
+.eco div::before{content:"";position:absolute;left:50%;top:38%;width:120px;height:120px;margin:-60px;border-radius:50%;background:radial-gradient(closest-side,rgba(252,213,53,.32),transparent);pointer-events:none}
+.eco .ill{position:relative;width:72px;height:72px;filter:drop-shadow(0 10px 16px rgba(0,0,0,.55));animation:float 4.5s ease-in-out infinite;transition:transform .3s}
+.eco div:nth-child(2) .ill{animation-delay:-.8s}.eco div:nth-child(3) .ill{animation-delay:-1.6s}.eco div:nth-child(4) .ill{animation-delay:-2.4s}.eco div:nth-child(5) .ill{animation-delay:-3.2s}.eco div:nth-child(6) .ill{animation-delay:-4s}
+.eco div:hover .ill{transform:scale(1.08) rotate(-4deg)}
+.eco b{position:relative;color:#fff;font-size:15px;letter-spacing:.01em}
+@keyframes float{0%,100%{translate:0 0}50%{translate:0 -6px}}
+.uses .ill{display:block;width:46px;height:46px;margin-bottom:8px}
+@media(max-width:760px){.eco div{padding:16px 4px 14px !important}.eco .ill{width:56px;height:56px}.eco b{font-size:13px}}
+@media(prefers-reduced-motion:reduce){.eco .ill{animation:none}}
+@media(max-width:430px){.hd{gap:6px}.tabs a{padding:0 8px;font-size:14px;height:36px}.hd-r{gap:6px}.hd-r .btn{padding:0 12px;font-size:14px;min-height:40px}.langb{padding:0 10px !important}}
 </style>
 </head>
 <body>
@@ -294,7 +344,19 @@ input:disabled{background:rgba(255,255,255,.6);color:var(--mute)}
 <ellipse cx="28" cy="43" rx="1.8" ry="2.3" fill="#0b0e11"/><ellipse cx="36" cy="43" rx="1.8" ry="2.3" fill="#0b0e11"/>
 <circle cx="25.5" cy="29" r="2.6" fill="#fff"/><circle cx="38.5" cy="29" r="2.6" fill="#fff"/>
 <path d="M27 18c2 3 8 3 10 0" stroke="#FCD535" stroke-width="2.4" fill="none" stroke-linecap="round"/>
-</symbol><symbol id="globe" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.8 5.6 3.8 9s-1.2 6.4-3.8 9c-2.6-2.6-3.8-5.6-3.8-9S9.4 5.6 12 3z"/></g></symbol></defs></svg>
+</symbol>
+<linearGradient id="gH" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9ad5"/><stop offset=".35" stop-color="#9ff3ff"/><stop offset=".7" stop-color="#fff2a1"/><stop offset="1" stop-color="#ffb86b"/></linearGradient>
+<linearGradient id="gH2" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7cf5ff"/><stop offset=".5" stop-color="#c39bff"/><stop offset="1" stop-color="#ff7ac8"/></linearGradient>
+<linearGradient id="gG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF3A8"/><stop offset=".5" stop-color="#FCD535"/><stop offset="1" stop-color="#C98A00"/></linearGradient>
+<linearGradient id="gD" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a5af0"/><stop offset="1" stop-color="#26196b"/></linearGradient>
+<radialGradient id="gS" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff"/><stop offset=".25" stop-color="#bff7ff"/><stop offset=".6" stop-color="#d7a6ff"/><stop offset="1" stop-color="#ff8fc8"/></radialGradient>
+<symbol id="ic-box" viewBox="0 0 64 64"><path d="M32 8 55 20 32 32 9 20z" fill="url(#gH)"/><path d="M9 20 32 32v25L9 45z" fill="url(#gD)"/><path d="M55 20 32 32v25l23-12z" fill="url(#gH2)"/><path d="M32 8 55 20 32 32 9 20z" fill="none" stroke="#fff" stroke-opacity=".75"/><path d="M39 40.5c.2-2.2 1.8-3.5 3.6-3.3 1.7.2 2.8 1.5 2.6 3-.3 2.2-3.2 2.4-3.4 4.4" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><circle cx="41.7" cy="48.6" r="1.4" fill="#fff"/><path d="M51 3l1.3 3.6L56 8l-3.7 1.4L51 13l-1.3-3.6L46 8l3.7-1.4z" fill="#FCD535"/></symbol>
+<symbol id="ic-drop" viewBox="0 0 64 64"><circle cx="32" cy="35" r="15" fill="url(#gS)"/><ellipse cx="32" cy="37" rx="26" ry="7" fill="none" stroke="url(#gG)" stroke-width="2.6" transform="rotate(-14 32 37)"/><circle cx="26.5" cy="29" r="4" fill="#fff" opacity=".75"/><path d="M15 6v9M23 3v8M45 5v10" stroke="#FCD535" stroke-width="2.2" stroke-linecap="round" opacity=".85"/></symbol>
+<symbol id="ic-rocket" viewBox="0 0 64 64"><ellipse cx="32" cy="58" rx="12" ry="3" fill="#FCD535" opacity=".55"/><path d="M32 3 46 29 32 56z" fill="url(#gH2)"/><path d="M32 3 18 29 32 56z" fill="url(#gH)"/><path d="M18 29h28" stroke="#fff" stroke-opacity=".7"/><path d="M32 3 18 29 32 56" fill="none" stroke="#fff" stroke-opacity=".5"/><path d="M52 14l1 2.8L56 18l-3 1.2-1 2.8-1-2.8L48 18l3-1.2z" fill="#FCD535"/></symbol>
+<symbol id="ic-merge" viewBox="0 0 64 64"><circle cx="24" cy="33" r="16" fill="url(#gH)"/><circle cx="40" cy="33" r="16" fill="url(#gH2)" opacity=".82"/><path d="M32 20.5l1.8 7.2L41 29.5l-7.2 1.8L32 38.5l-1.8-7.2L23 29.5l7.2-1.8z" fill="#fff"/><path d="M52 8l1 2.8L56 12l-3 1.2-1 2.8-1-2.8L48 12l3-1.2z" fill="#FCD535"/></symbol>
+<symbol id="ic-tag" viewBox="0 0 64 64"><rect x="12" y="15" width="22" height="32" rx="4" fill="url(#gD)" transform="rotate(-16 23 31)"/><rect x="21" y="12" width="22" height="32" rx="4" fill="url(#gH2)"/><rect x="30" y="15" width="22" height="32" rx="4" fill="url(#gH)" stroke="#FCD535" stroke-width="1.6" transform="rotate(16 41 31)"/><path d="M34 26l7 4-7 4z" fill="#fff" opacity=".85" transform="rotate(16 41 31)"/></symbol>
+<symbol id="ic-crown" viewBox="0 0 64 64"><path d="M30 4c2 13 7 18 20 20-13 2-18 7-20 20-2-13-7-18-20-20 13-2 18-7 20-20z" fill="url(#gG)"/><path d="M30 4c2 13 7 18 20 20-13 2-18 7-20 20" fill="none" stroke="#fff" stroke-opacity=".6"/><path d="M49 39c.9 5.2 3 7.3 8 8.2-5 .9-7.1 3-8 8.2-.9-5.2-3-7.3-8-8.2 5-.9 7.1-3 8-8.2z" fill="url(#gH)"/><circle cx="26" cy="19" r="3" fill="#fff" opacity=".8"/></symbol>
+<symbol id="globe" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.8 5.6 3.8 9s-1.2 6.4-3.8 9c-2.6-2.6-3.8-5.6-3.8-9S9.4 5.6 12 3z"/></g></symbol></defs></svg>
 <header><div class="wrap hd">
   <a class="brand d" href="#"><svg class="logo"><use href="#cc"/></svg><span>COWCOW</span></a>
   <nav class="tabs"><a href="#" id="tSale" data-i="nav.sale"></a><a href="#whitepaper" id="tWp" data-i="nav.wp"></a></nav>
@@ -339,14 +401,7 @@ input:disabled{background:rgba(255,255,255,.6);color:var(--mute)}
       <button class="btn full" id="faucet" type="button" data-i="faucet" style="margin-top:12px" hidden></button>
     </form>
   </div>
-  <details class="tool"><summary data-i="up.h"></summary>
-    <p class="note" style="margin:0 0 12px" data-i="up.sub"></p>
-    <div class="upl">
-      <label class="btn k" for="upAll" data-i="up.all"></label><input type="file" id="upAll" class="vh" accept="image/*" multiple>
-      <span id="slots" style="display:contents"></span>
-      <button class="btn" id="upReset" type="button" data-i="up.reset"></button>
-    </div>
-  </details>
+
 </div></section>
 
 <section id="mineSec" style="padding-top:0"><div class="wrap">
@@ -366,6 +421,13 @@ input:disabled{background:rgba(255,255,255,.6);color:var(--mute)}
     </div>
     <div class="inv"><code id="link"></code><button class="btn" id="copy" type="button" data-i="copy"></button></div>
     <p class="note" id="mineTip" data-i="mine.soon"></p><p class="note" id="rebLine" hidden></p><p class="note" style="margin-top:4px" data-i="mine.note"></p>
+  </div>
+</div></section>
+
+<section style="padding-top:0"><div class="wrap">
+  <div class="panel ecoP">
+    <div class="sh" style="margin-bottom:18px"><h2 class="d" data-i="eco.h"></h2><span class="badge" data-i="eco.soon"></span></div>
+    <div class="eco" id="eco"></div>
   </div>
 </div></section>
 
@@ -405,6 +467,7 @@ input:disabled{background:rgba(255,255,255,.6);color:var(--mute)}
 
 <div class="toast" id="toast" hidden></div>
 <div class="modal" id="modal" hidden><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="mt">
+  <div class="rays"></div><div class="burst"></div><div class="burst b2"></div><div class="fx" id="fx"></div>
   <h3 id="mt"></h3>
   <p class="note" id="msub" style="margin:0"></p><p class="note" id="merr" style="color:#c4361f;margin-top:10px" hidden></p><a class="note" id="txLink" target="_blank" rel="noopener" hidden style="display:inline-block;margin-top:8px;color:var(--ink)"></a>
   <ol class="steps" id="steps"><li data-i="step1"></li><li data-i="step2"></li><li data-i="step3"></li></ol>
@@ -483,41 +546,41 @@ en:{
  'step1':'Approve USDT','step2':'Pay','step3':'Mint node NFT','again':'Buy more','toMine':'View my nodes','mt.buying':'Purchasing','mt.ok':'Purchase complete','msub.ok':'You got {n} × {q}, hashpower +{hp}'
 }};
 const WP={
-zh:{ver:'CowCow 白皮书 · v1.0',h:'全息 NFT 的<em>下一个时代</em>',
- sub:'CowCow 把全息卡牌的收藏热情、开盒的心跳和社交传播的速度，装进一个由平台币驱动、由节点共同支撑的链上娱乐生态。',
- stats:[['2,697','节点 NFT · 永不增发'],['1 亿','平台币总量'],['6','大核心玩法']],
- flow:['用户用平台币交易全息 NFT','收取手续费','节点分红 40%','销毁 30%','金库营销 30%'],
+zh:{ver:'CowCow 白皮书 · v1.0',h:'全息 NFT 的<em>下一个时代。</em>',
+ sub:'收藏的快感，开盒的心跳，分享的速度。CowCow 把它们放进同一个链上生态：节点驱动，平台币流通。',
+ stats:[['2,697','节点，永不增发'],['1 亿','平台币总量'],['6','核心玩法']],
+ flow:['用平台币交易','产生手续费','40% 节点','30% 销毁','30% 金库'],
  secs:[
- {id:'w1',h:'愿景：让收藏重新好玩',b:['二十年前，一张闪着彩虹光的卡片能让整个班级围过来。收藏、交换、比拼稀有度，是一代人共同的记忆。','CowCow 要把这份快乐带到链上：每一张全息 NFT 都有独一无二的光泽与编号，可以开、可以合、可以换、可以晒。我们要做的不只是一个交易市场，而是一个让人每天都想打开、忍不住分享给朋友的全息数字娱乐网络。']},
- {id:'w2',h:'为什么是全息 NFT',b:[['grid',[['看得见的稀有','全息光泽随角度流动，稀有度一眼可见，天生适合截图和短视频传播。'],['真正属于你','每一张都在链上确权，可以转让、可以交易，不依赖任何平台存在。'],['可以玩的资产','合成、盲盒、首发、空投，让收藏不再是放着不动的图片。']]]]},
- {id:'w3',h:'娱乐与传播：生态的引擎',b:['好玩的东西会自己传播。CowCow 的每一个玩法，都围绕「开、合、晒、邀」四个动作设计：',['grid',[['盲盒','开盒的心跳，稀有款出现时全站播报'],['合成','多张合一，冲击更高稀有度'],['首发','新系列限时发售，先到先得'],['优先购','节点持有者优先抢购每一个新系列'],['寄售市场','自由买卖，稀有款的价值由市场定义'],['空投','赛季活动与持有者专属空投']]],'开盒瞬间一键生成分享海报，赛季活动、限量联名和邀请奖励层层叠加，让每一位用户都成为生态的传播者。']},
- {id:'w4',h:'节点：生态最稀缺的席位',b:['CowCow 节点 NFT 共 2,697 张，分为创世、超级、社区三档，售完即止，永不增发。挖矿产出、手续费分红、新系列优先购，都只属于节点持有者。',['nums',[['129','创世节点 · 全网最稀缺'],['888','超级节点'],['1,680','社区节点']]],['x','tbl'],'生态用户会持续增长，节点数量永远不变。用户越多，每一个节点背后对应的交易、手续费和关注度就越多，这就是节点的稀缺性。']},
- {id:'w5',h:'平台币：生态唯一流通货币',b:['平台币总量 1 亿枚，是 CowCow 内所有全息 NFT 交易的结算货币。开盒、合成、抢首发、在市场买卖，全部使用平台币，每一笔交易的手续费都回流到节点、销毁和金库。',['x','flow']]},
- {id:'w6',h:'节点矿池',b:[['list',['矿池总量 3000 万枚，占平台币总量的 30%，只能通过质押节点 NFT 挖出。','预挖期：买卡当天即可质押，每 1 算力每天固定产出 9.43 积分，平台币发行时 1:1 兑换。','正式期：平台币发行后，第 1 年产出 1500 万枚，之后每年减半，按全网质押算力实时分配。','挖出的平台币随时可以领取，不设锁仓，不设线性释放。','节点 NFT 可以在市场转让，算力随 NFT 一起转移。']]]},
- {id:'w7',h:'手续费与通缩',b:['各玩法的费率由平台设定并公示，例如寄售成交收取 5%。所有手续费以平台币收取，并按以下比例分配：',['x','fee'],'交易越活跃，节点分红越多，销毁越多，平台币流通量持续收缩；金库部分投入营销、活动与生态建设，持续带来新用户。']},
- {id:'w8',h:'增长飞轮',b:[['road',[['进入','新用户为了开盒、合成、抢首发持有平台币'],['交易','每一笔交易都产生手续费'],['回流','40% 分红给节点，30% 销毁，30% 投入营销'],['增值','节点更有价值，平台币持续通缩'],['扩散','营销与分享带来更多新用户，飞轮再转一圈']]]]},
- {id:'w9',h:'代币分配',b:[['x','alloc'],'IPO 募集资金中 15 万 U 与 300 万枚平台币组成初始流动性池，开盘价 0.05 U。']},
- {id:'w10',h:'成长空间',b:['IPO 只是起点。CowCow 的边界会随着生态一起扩张：',['grid',[['更多系列','持续发行原创全息系列，覆盖潮玩、艺术、游戏'],['IP 联名','与链上社区和知名 IP 联合发行全息 NFT'],['AI 创作','引入 AI 生成卡面，人人都能创造自己的全息 NFT'],['多链拓展','从 BSC 出发，连接更多公链与用户'],['虚实结合','探索限量实体全息卡兑换，打通线上与线下'],['社区共建','节点持有者参与新系列与活动的方向']]]]},
- {id:'w11',h:'路线图',b:[['road',[['起源','节点 NFT IPO，买卡即可质押预挖积分'],['点火','平台币发行，积分 1:1 兑换，流动性上线，正式矿池开启'],['市场','寄售市场、首发购买、优先购上线'],['娱乐','盲盒、合成、空投与赛季活动上线'],['扩张','IP 联名、AI 创作、多链拓展']]]]},
- {id:'w12',h:'风险提示',b:['数字资产价格波动大，挖矿产出与分红取决于质押率和平台交易量，不构成收益承诺。参与前请确认所在地区的法律法规，并只投入可以承受损失的资金。']}
+ {id:'w1',h:'愿景',b:['还记得第一张闪光卡吗？那道彩虹光，能让整个教室围过来。','CowCow 把这份感觉带上链。每一张全息 NFT 都独一无二：可以开，可以合，可以换，可以晒。我们不做又一个交易市场，我们要做一个让人每天都想打开的地方。']},
+ {id:'w2',h:'为什么是全息 NFT',b:[['grid',[['看得见的稀有','光泽随角度流动，稀有度一眼就懂。天生为截图和短视频而生。'],['真正属于你','链上确权，自由转让，不依赖任何平台。'],['拿来玩的资产','合成、盲盒、首发、空投。收藏，不再只是放着。']]]]},
+ {id:'w3',h:'为传播而设计',b:['好玩的东西会自己传播。CowCow 的一切，都围绕四个动作：开、合、晒、邀。',['grid',[['盲盒','心跳时刻，稀有款全站播报'],['合成','多张合一，冲击更高稀有度'],['首发','新系列，限时发售'],['优先购','节点持有者，永远先到'],['寄售市场','自由交易，价格由市场说了算'],['空投','赛季活动与持有者专属']]],'每一次开盒，一键变成分享海报。赛季、联名、邀请奖励层层叠加：每一位用户，都是 CowCow 的传播者。']},
+ {id:'w4',h:'节点：最稀缺的席位',b:['2,697 枚节点 NFT，三档，售完即止，永不增发。挖矿、分红、优先购，只属于节点持有者。',['nums',[['129','创世'],['888','超级'],['1,680','社区']]],['x','tbl'],'用户会越来越多，节点永远只有这么多。这就是稀缺。']},
+ {id:'w5',h:'平台币',b:['总量 1 亿，CowCow 内唯一的结算货币。开盒、合成、首发、交易，全部使用平台币。每一笔手续费，都回流到节点、销毁和金库。',['x','flow']]},
+ {id:'w6',h:'节点矿池',b:[['list',['总量 3000 万枚，占 30%，只能靠质押节点挖出。','预挖期：买卡当天即可质押。每 1 算力每天 9.43 积分，发币时 1:1 兑换。','正式期：首年 1500 万枚，此后每年减半，按全网质押算力实时分配。','随时领取。没有锁仓，没有线性释放。','节点可以自由转让，算力跟着节点走。']]]},
+ {id:'w7',h:'手续费与通缩',b:['每个玩法的费率公开透明，例如寄售成交 5%。所有手续费以平台币收取，并这样分配：',['x','fee'],'交易越多，分红越多，销毁越多。金库持续投入增长，把新用户带进来。']},
+ {id:'w8',h:'增长飞轮',b:[['road',[['进入','新用户持有平台币，开盒、合成、抢首发'],['交易','每一笔交易产生手续费'],['回流','40% 给节点，30% 销毁，30% 投入增长'],['增值','节点更值钱，平台币更稀缺'],['扩散','分享与营销带来新用户，飞轮再转一圈']]]]},
+ {id:'w9',h:'代币分配',b:[['x','alloc'],'15 万 U 加 300 万枚平台币组成初始流动性池，开盘价 0.05 U。']},
+ {id:'w10',h:'下一步',b:['IPO 只是第一天。',['grid',[['更多系列','原创全息系列：潮玩、艺术、游戏'],['IP 联名','与链上社区和知名 IP 联合发行'],['AI 创作','人人都能生成自己的全息 NFT'],['多链','从 BSC 出发，走向更多公链'],['虚实结合','限量实体全息卡兑换'],['社区共建','节点持有者参与决定新系列与活动']]]]},
+ {id:'w11',h:'路线图',b:[['road',[['起源','节点 IPO，买卡即挖积分'],['点火','平台币上线，积分 1:1 兑换，正式矿池开启'],['市场','寄售、首发、优先购上线'],['娱乐','盲盒、合成、空投、赛季活动'],['扩张','IP 联名、AI 创作、多链']]]]},
+ {id:'w12',h:'风险提示',b:['数字资产价格波动剧烈。挖矿产出与分红取决于质押率和平台交易量，不构成任何收益承诺。参与前请确认当地法规，只投入你能承受损失的资金。']}
 ]},
-en:{ver:'CowCow Whitepaper · v1.0',h:'The next era of <em>Holo NFTs</em>',
- sub:'CowCow brings the thrill of collecting holographic cards, the heartbeat of opening a box and the speed of social sharing into one on-chain entertainment ecosystem, powered by its platform token and anchored by its nodes.',
- stats:[['2,697','Node NFTs · never reissued'],['100M','Platform token supply'],['6','Core experiences']],
- flow:['Users trade Holo NFTs with the token','Fee charged','Node dividends 40%','Burn 30%','Treasury 30%'],
+en:{ver:'CowCow Whitepaper · v1.0',h:'The next era of <em>Holo NFTs.</em>',
+ sub:'The rush of collecting. The heartbeat of the pull. The speed of a share. CowCow puts it all on-chain, powered by its token and anchored by its nodes.',
+ stats:[['2,697','nodes. Never more.'],['100M','token supply'],['6','core experiences']],
+ flow:['Trade with the token','Fee charged','40% nodes','30% burn','30% treasury'],
  secs:[
- {id:'w1',h:'Vision: make collecting fun again',b:['Twenty years ago, one rainbow-foil card could gather a whole classroom. Collecting, trading and comparing rarity was a shared memory for a generation.','CowCow brings that joy on-chain. Every Holo NFT has its own shimmer and serial number, and can be opened, combined, traded and shown off. We are not building just another marketplace, but a holographic entertainment network people want to open every day and share with friends.']},
- {id:'w2',h:'Why Holo NFTs',b:[['grid',[['Rarity you can see','The holographic shimmer shifts with every angle, so rarity is obvious at a glance and made for screenshots and short videos.'],['Truly yours','Every piece is owned on-chain, transferable and tradable, and does not depend on any platform to exist.'],['Assets you can play','Synthesis, blind boxes, launches and airdrops turn collecting into something you do, not just something you hold.']]]]},
- {id:'w3',h:'Entertainment and sharing: the engine',b:['Fun spreads by itself. Every CowCow experience is built around four actions: open, combine, show off and invite.',['grid',[['Blind boxes','The heartbeat of opening; rare pulls are announced site-wide'],['Synthesis','Combine several into one and chase higher rarity'],['First release','New series in limited-time launches'],['Priority sale','Node holders get first access to every new series'],['Marketplace','Trade freely; the market defines what rarity is worth'],['Airdrops','Season events and holder-only drops']]],'One tap turns every opening into a shareable poster. Season events, limited collaborations and referral rewards stack up, so every user becomes part of how CowCow spreads.']},
- {id:'w4',h:'Nodes: the scarcest seats in the ecosystem',b:['There are 2,697 CowCow node NFTs across three tiers, Genesis, Super and Community, sold until gone and never reissued. Mining output, fee dividends and priority access to new series belong to node holders only.',['nums',[['129','Genesis nodes · the rarest'],['888','Super nodes'],['1,680','Community nodes']]],['x','tbl'],'The user base keeps growing while the number of nodes never changes. The more users join, the more trading, fees and attention sit behind every single node. That is what node scarcity means.']},
- {id:'w5',h:'The platform token: the only currency',b:['The platform token has a fixed supply of 100M and settles every Holo NFT transaction on CowCow. Opening boxes, synthesizing, joining launches and trading on the marketplace all use the token, and every fee flows back to nodes, to burns and to the treasury.',['x','flow']]},
- {id:'w6',h:'Node mining pool',b:[['list',['A pool of 30M tokens, 30% of total supply, that can only be mined by staking node NFTs.','Pre-mining: stake on the day you buy and earn a fixed 9.43 points per hashpower per day, converted 1:1 into the token at launch.','After launch: year 1 emits 15M tokens, halving every year after, shared continuously by network staked hashpower.','Mined tokens can be claimed any time, with no lock-up and no vesting.','Node NFTs can be sold on the marketplace, and their hashpower moves with them.']]]},
- {id:'w7',h:'Fees and deflation',b:['Each experience has a fee rate set and published by the platform, for example 5% on marketplace sales. All fees are charged in the platform token and split as follows:',['x','fee'],'More trading means more node dividends and more burns, so circulating supply keeps shrinking, while the treasury share funds marketing, events and ecosystem growth that keep bringing in new users.']},
- {id:'w8',h:'The growth flywheel',b:[['road',[['Enter','New users hold the token to open boxes, synthesize and join launches'],['Trade','Every transaction generates a fee'],['Return','40% to nodes, 30% burned, 30% to marketing'],['Grow','Nodes gain value and the token keeps deflating'],['Spread','Marketing and sharing bring more users, and the flywheel turns again']]]]},
- {id:'w9',h:'Token allocation',b:[['x','alloc'],'150K U from the IPO plus 3M platform tokens seed the initial liquidity pool, for an opening price of 0.05 U.']},
- {id:'w10',h:'Room to grow',b:['The IPO is only the beginning. CowCow grows with its ecosystem:',['grid',[['More series','Original holographic series across art toys, art and gaming'],['IP collaborations','Joint Holo NFT releases with on-chain communities and well-known IPs'],['AI creation','AI-generated card art so anyone can create their own Holo NFT'],['Multichain','Starting on BSC and connecting more chains and users'],['Physical meets digital','Exploring limited physical holo cards redeemable from NFTs'],['Community-built','Node holders help shape new series and events']]]]},
- {id:'w11',h:'Roadmap',b:[['road',[['Origin','Node NFT IPO; stake right away to pre-mine points'],['Ignition','Token launch, 1:1 point conversion, liquidity and full mining go live'],['Market','Marketplace, first-release sales and priority sales go live'],['Play','Blind boxes, synthesis, airdrops and season events go live'],['Expand','IP collaborations, AI creation and multichain expansion']]]]},
- {id:'w12',h:'Risk notice',b:['Digital asset prices are volatile. Mining output and dividends depend on the staking rate and platform volume and are not guaranteed returns. Check the laws where you live before taking part, and only commit funds you can afford to lose.']}
+ {id:'w1',h:'Vision',b:['Remember your first foil card? That rainbow shimmer could stop a whole classroom.','CowCow brings that feeling on-chain. Every Holo NFT is one of a kind: open it, combine it, trade it, show it off. We are not building another marketplace. We are building the place you open every day.']},
+ {id:'w2',h:'Why Holo NFTs',b:[['grid',[['Rarity you can see','The shimmer moves with every angle. Rarity reads at a glance, made for screenshots and short video.'],['Actually yours','Owned on-chain. Transferable. Independent of any platform.'],['Built to play','Synthesis, blind boxes, launches, airdrops. Collecting that actually does something.']]]]},
+ {id:'w3',h:'Designed to spread',b:['Fun spreads itself. Everything on CowCow comes down to four moves: open, combine, flex, invite.',['grid',[['Blind boxes','The pull. Rare hits announced site-wide'],['Synthesis','Combine to chase higher rarity'],['First release','New series, limited windows'],['Priority sale','Node holders always go first'],['Marketplace','Trade freely. The market sets the price'],['Airdrops','Season events and holder-only drops']]],'Every pull becomes a shareable poster in one tap. Seasons, collabs and referral rewards stack up, so every user helps CowCow grow.']},
+ {id:'w4',h:'Nodes: the scarcest seats',b:['2,697 node NFTs. Three tiers. Sold until gone, never reissued. Mining, dividends and priority access belong to node holders only.',['nums',[['129','Genesis'],['888','Super'],['1,680','Community']]],['x','tbl'],'Users will keep coming. Nodes will not. That is scarcity.']},
+ {id:'w5',h:'The token',b:['100M fixed supply and the only currency on CowCow. Pulls, synthesis, launches and trades all settle in the token, and every fee flows back to nodes, burns and the treasury.',['x','flow']]},
+ {id:'w6',h:'Mining pool',b:[['list',['30M tokens, 30% of supply, mined only by staking nodes.','Pre-mining: stake the day you buy. 9.43 points per hashpower per day, converted 1:1 at launch.','After launch: 15M in year 1, halving every year, shared by network staked hashpower in real time.','Claim anytime. No lock-up. No vesting.','Nodes are transferable, and hashpower moves with them.']]]},
+ {id:'w7',h:'Fees and deflation',b:['Every experience has a public fee rate, for example 5% on marketplace sales. All fees are charged in the token and split like this:',['x','fee'],'More trading means more dividends and more burns. The treasury keeps investing in growth and bringing in new users.']},
+ {id:'w8',h:'The flywheel',b:[['road',[['Enter','New users hold the token to pull, combine and join launches'],['Trade','Every transaction generates a fee'],['Return','40% to nodes, 30% burned, 30% to growth'],['Compound','Nodes gain value, the token gets scarcer'],['Spread','Shares and marketing bring new users. Repeat.']]]]},
+ {id:'w9',h:'Tokenomics',b:[['x','alloc'],'150K U and 3M tokens seed the initial liquidity pool at an opening price of 0.05 U.']},
+ {id:'w10',h:'What\'s next',b:['The IPO is day one.',['grid',[['More series','Original holo drops across art toys, art and gaming'],['IP collabs','Co-releases with on-chain communities and known IPs'],['AI creation','Anyone can generate their own Holo NFT'],['Multichain','Starting on BSC, expanding from there'],['Physical','Limited physical holo cards, redeemable from NFTs'],['Community-built','Node holders help shape new series and events']]]]},
+ {id:'w11',h:'Roadmap',b:[['road',[['Origin','Node IPO. Mine points from day one'],['Ignition','Token launch, 1:1 conversion, full mining goes live'],['Market','Marketplace, launches and priority sales'],['Play','Blind boxes, synthesis, airdrops, seasons'],['Expand','IP collabs, AI creation, multichain']]]]},
+ {id:'w12',h:'Risk notice',b:['Digital assets are volatile. Mining output and dividends depend on the staking rate and platform volume and are not guaranteed. Check your local laws before taking part, and only commit what you can afford to lose.']}
 ]}};
 Object.assign(I.zh,{
  'hero.chip':'节点认购进行中 · 买卡即可挖矿','hero.sub':'持有 CowCow 节点 NFT，买卡当天即可质押挖积分，平台币发行时 1:1 兑换，还能分享平台每一笔交易的手续费。',
@@ -596,23 +659,30 @@ function renderTables(){
  $$('.tblHead').forEach(e=>e.innerHTML='<tr>'+th.map(x=>`<th>${x}</th>`).join('')+'</tr>');
  $$('.tblRows').forEach(e=>e.innerHTML=tb);
 }
-function renderSlots(){$('#slots').innerHTML=T.map((c,i)=>`<label class="slot${c.img?' done':''}"><input type="file" class="vh" accept="image/*" data-n="${i}"><span>${tn(i)}</span><b>${c.img?t('up.done'):t('up.one')}</b></label>`).join('')}
+function renderSlots(){if(!$('#slots'))return;$('#slots').innerHTML=T.map((c,i)=>`<label class="slot${c.img?' done':''}"><input type="file" class="vh" accept="image/*" data-n="${i}"><span>${tn(i)}</span><b>${c.img?t('up.done'):t('up.one')}</b></label>`).join('')}
 function renderModal(){if($('#modal').hidden||!lastBuy)return;const {i,q,done}=lastBuy;
  $('#mt').textContent=done?t('mt.ok'):t('mt.buying');
- $('#msub').textContent=done?t('msub.ok',{n:tn(i),q,pd:f1(day(q*T[i].hp))}):`${tn(i)} × ${q} · ${fmt(q*T[i].p)} U`;
+ $('#msub').textContent=done?t('msub.ok',{n:tn(i),q,hp:f1(q*T[i].hp),pd:f1(day(q*T[i].hp))}):`${tn(i)} × ${q} · ${fmt(q*T[i].p)} U`;
  if(done)$('#front').innerHTML=card(T[i],i,'div')}
 function renderBuy(){renderSeg();renderStage();renderInfo()}
 function renderWp(){const W=WP[L],X={tbl:'<div class="wpbox" style="overflow-x:auto"><table><thead class="tblHead"></thead><tbody class="tblRows"></tbody></table></div>',fee:'<div class="wpbox"><div class="feeBox"></div></div>',alloc:'<div class="wpbox alloc"><div class="allocRows"></div></div>',flow:'<div class="wpbox"><div class="flow">'+W.flow.map((f,i)=>`<span>${f}</span>`+(i<2?'<i>→</i>':'')).join('')+'</div></div>'};
- const blk=b=>typeof b==='string'?`<p>${b}</p>`:b[0]==='x'?X[b[1]]:b[0]==='grid'?`<div class="wpbox"><div class="uses">${b[1].map(u=>`<div><b>${u[0]}</b><span>${u[1]}</span></div>`).join('')}</div></div>`:b[0]==='nums'?`<div class="wpnums">${b[1].map(n=>`<div class="panel"><b class="d num">${n[0]}</b><span>${n[1]}</span></div>`).join('')}</div>`:b[0]==='list'?`<ul>${b[1].map(x=>`<li>${x}</li>`).join('')}</ul>`:`<ol class="road">${b[1].map(r=>`<li><b>${r[0]}</b><span>${r[1]}</span></li>`).join('')}</ol>`;
+ const blk=b=>typeof b==='string'?`<p>${b}</p>`:b[0]==='x'?X[b[1]]:b[0]==='grid'?`<div class="wpbox"><div class="uses">${b[1].map(u=>`<div>${ICON[u[0]]?ico(ICON[u[0]]):''}<b>${u[0]}</b><span>${u[1]}</span></div>`).join('')}</div></div>`:b[0]==='nums'?`<div class="wpnums">${b[1].map(n=>`<div class="panel"><b class="d num">${n[0]}</b><span>${n[1]}</span></div>`).join('')}</div>`:b[0]==='list'?`<ul>${b[1].map(x=>`<li>${x}</li>`).join('')}</ul>`:`<ol class="road">${b[1].map(r=>`<li><b>${r[0]}</b><span>${r[1]}</span></li>`).join('')}</ol>`;
  $('#wpBody').innerHTML=`<div class="panel wphero"><svg class="logo" style="width:56px;height:56px"><use href="#cc"/></svg><span class="chip" style="margin-left:10px;vertical-align:middle">${W.ver}</span><h1 class="d">${W.h}</h1><p class="lead">${W.sub}</p><div class="wpstats">${W.stats.map(x=>`<div><b class="d num">${x[0]}</b><span>${x[1]}</span></div>`).join('')}</div></div><div class="toc" id="toc">${W.secs.map(x=>`<button type="button" data-t="${x.id}">${x.h}</button>`).join('')}</div>`+W.secs.map(x=>`<h3 id="${x.id}">${x.h}</h3>`+x.b.map(blk).join('')).join('')+`<p class="note">${t('demo')}</p>`}
-function renderAll(){applyStatic();renderWp();renderTables();renderSlots();renderFan();renderBuy();renderMine();renderModal()}
+const ECO=[['box','盲盒','Blind Box'],['drop','空投','Airdrops'],['rocket','首发','Launches'],['merge','合成','Synthesis'],['tag','市场','Market'],['crown','优先购','Priority']];
+const ICON={'盲盒':'box','Blind boxes':'box','合成':'merge','Synthesis':'merge','首发':'rocket','First release':'rocket','优先购':'crown','Priority sale':'crown','寄售市场':'tag','Marketplace':'tag','空投':'drop','Airdrops':'drop'};
+const ico=k=>`<svg class="ill" aria-hidden="true"><use href="#ic-${k}"/></svg>`;
+function renderEco(){$('#eco').innerHTML=ECO.map(e=>`<div>${ico(e[0])}<b>${L==='zh'?e[1]:e[2]}</b></div>`).join('')}
+function celebrate(){const fx=$('#fx');fx.innerHTML='';const cols=['#FCD535','#fff','#F0B90B','#ffe877'];
+ for(let k=0;k<44;k++){const a=Math.random()*Math.PI*2,d=110+Math.random()*190,el=document.createElement('i');
+  el.style.cssText=`--dx:${(Math.cos(a)*d).toFixed(0)}px;--dy:${(Math.sin(a)*d).toFixed(0)}px;--r:${(Math.random()*540-270).toFixed(0)}deg;--d:${(.65+Math.random()*.25).toFixed(2)}s;--t:${(1+Math.random()*.7).toFixed(2)}s;background:${cols[k%4]};${k%3?'':'border-radius:50%;'}${k%5?'':'width:5px;height:12px;'}`;fx.appendChild(el)}}
+function renderAll(){applyStatic();renderEco();renderWp();renderTables();renderSlots();renderFan();renderBuy();renderMine();renderModal()}
 function pick(i){sel=i;qty=1;renderBuy()}
 
 function setImg(i,file){if(!file||!/^image\//.test(file.type))return;if(T[i].img)URL.revokeObjectURL(T[i].img);T[i].img=URL.createObjectURL(file)}
 function refreshArt(){renderFan();renderStage();renderMine();renderSlots()}
-$('#slots').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];setImg(+e.target.dataset.n,f);refreshArt()});
-$('#upAll').addEventListener('change',e=>{[...e.target.files].slice(0,T.length).forEach((f,i)=>setImg(i,f));e.target.value='';refreshArt()});
-$('#upReset').addEventListener('click',()=>{T.forEach(c=>{if(c.img){URL.revokeObjectURL(c.img);c.img=null}});refreshArt()});
+$('#slots')?.addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];setImg(+e.target.dataset.n,f);refreshArt()});
+$('#upAll')?.addEventListener('change',e=>{[...e.target.files].slice(0,T.length).forEach((f,i)=>setImg(i,f));e.target.value='';refreshArt()});
+$('#upReset')?.addEventListener('click',()=>{T.forEach(c=>{if(c.img){URL.revokeObjectURL(c.img);c.img=null}});refreshArt()});
 const menu=$('#langMenu'),setMenu=o=>{menu.hidden=!o;$('#lang').setAttribute('aria-expanded',o)};
 $('#lang').addEventListener('click',e=>{e.stopPropagation();setMenu(menu.hidden)});
 menu.addEventListener('click',e=>{const b=e.target.closest('[data-l]');if(!b)return;L=b.dataset.l;try{localStorage.setItem('cowcow-lang',L)}catch(err){}setMenu(false);renderAll()});
@@ -759,7 +829,7 @@ function renderQty(){const c=T[sel],left=c.cap-c.sold;
  $('#buyBtn').textContent=left<=0?t('buy.soldout'):paused?t('buy.paused'):c.active===false?t('buy.closed'):(account?t('buy.btn'):t('buy.connect'))}
 
 function modalState(kind,msg,hash){const err=$('#merr');
- if(kind==='fail'){$('#mt').textContent=t('mt.fail');err.textContent=msg;err.hidden=false;$('#toMine').hidden=true;$('#again').textContent=t('close');$('#acts').hidden=false;$('#acts').style.display='flex'}
+ if(kind==='fail'){$('.sheet').classList.remove('win');$('#mt').textContent=t('mt.fail');err.textContent=msg;err.hidden=false;$('#toMine').hidden=true;$('#again').textContent=t('close');$('#acts').hidden=false;$('#acts').style.display='flex'}
  else{err.hidden=true;$('#toMine').hidden=false;$('#again').textContent=t('again')}
  $('#txLink').hidden=!hash;if(hash){$('#txLink').href=CFG.explorer+'/tx/'+hash;$('#txLink').textContent=t('viewTx')}}
 
@@ -774,7 +844,7 @@ $('#form').addEventListener('submit',async e=>{e.preventDefault();
  try{if((await usdtR.balanceOf(account))<cost){toast(t('err.balance'));return}}catch(x){}
  const lis=[...$$('#steps li')];lastBuy={i,q,done:false};
  lis.forEach(l=>l.className='');$('#steps').hidden=false;$('#flip').hidden=true;$('#acts').hidden=true;$('#acts').style.display='';$('#inner').classList.remove('go');
- modalState('run');$('#modal').hidden=false;renderModal();
+ $('.sheet').classList.remove('win');$('#fx').innerHTML='';modalState('run');$('#modal').hidden=false;renderModal();
  let hash=null;
  try{
   lis[0].className='doing';
@@ -793,7 +863,7 @@ $('#form').addEventListener('submit',async e=>{e.preventDefault();
  try{localStorage.removeItem('cowcow-ref')}catch(x){}
  await loadTiers();await loadMine();if(API)setTimeout(loadMine,8000);
  lastBuy.done=true;$('#steps').hidden=true;$('#flip').hidden=false;modalState('ok',null,hash);renderModal();
- await wait(120);$('#inner').classList.add('go');await wait(900);$('#acts').hidden=false;$('#acts').style.display='flex'});
+ $('.sheet').classList.add('win');celebrate();await wait(80);$('#inner').classList.add('go');await wait(1900);$('#acts').hidden=false;$('#acts').style.display='flex'});
 
 $('#faucet').hidden=!CFG.testnet;
 $('#faucet').addEventListener('click',async()=>{if(!account&&!(await connect(false)))return;
@@ -808,6 +878,53 @@ $('#copy').addEventListener('click',async()=>{if(!account){connect(false);return
  if(r&&E.isAddress(r))$('#ref').value=E.getAddress(r)})();
 $('#tnet').hidden=!CFG.testnet;
 
+Object.assign(I.zh,{'hero.sub':'质押挖矿 · 手续费分红 · 生态权益','pick.sub':'档位越高，算力越多','buy.note':'USDT 支付 · 链上铸造 · 买完即可质押','dark.sub':'挖矿 + 分红，两份收益','pool.sub':'只有质押节点 NFT 才能挖','fee.sub':'所有玩法的手续费，分三份','mine.api':'签名质押，不花 gas · 积分发币时 1:1 兑换','mine.soon':'质押功能即将开放','tbl.note':'每日积分 = 算力 × 9.43','demo':'© 2026 CowCow · BNB Chain','mt.ok':'恭喜获得','msub.ok':'{n} × {q} · 算力 +{hp}','eco.h':'生态玩法','eco.soon':'即将上线','mine.note':'邀请好友认购，10% USDT 返佣实时到账'});
+Object.assign(I.en,{'hero.sub':'Stake to mine · Fee dividends · Ecosystem perks','pick.sub':'Higher tier, more hashpower','buy.note':'Pay in USDT · Minted on-chain · Stake right away','dark.sub':'Mining plus dividends','pool.sub':'Only staked node NFTs can mine','fee.sub':'Every fee is split three ways','mine.api':'Stake by signing, no gas · Points convert 1:1 at launch','mine.soon':'Staking opens soon','tbl.note':'Daily points = hashpower × 9.43','demo':'© 2026 CowCow · BNB Chain','mt.ok':'Congratulations','msub.ok':'{n} × {q} · Hashpower +{hp}','eco.h':'Ecosystem','eco.soon':'Coming soon','mine.note':'Invite friends and earn 10% in USDT instantly'});
+Object.assign(I.zh,{
+ 'nav.sale':'铸造','nav.wp':'白皮书','conn':'连接钱包',
+ 'hero.chip':'节点发售中 · 售完即止','hero.h':'每一张全息 NFT，<em>都是一个节点。</em>','hero.sub':'质押即挖矿，分享每一笔手续费。先人一步。','hero.cta':'立即铸造','hero.wp':'阅读白皮书',
+ 'f1':'档节点','f2':'枚节点，永不增发','f3v':'当天','f3':'即可开挖',
+ 'pick.h':'选择你的节点','pick.sub':'档位越高，算力越强。',
+ 'info.supply':'发行量','info.hp':'算力','info.daily':'每日积分','info.share':'分红占比','pcs':'枚',
+ 'buy.qty':'数量','buy.ref':'邀请人地址（选填）','buy.pay':'合计','buy.note':'USDT 支付 · 链上铸造 · 即刻质押','buy.btn':'授权并铸造','buy.connect':'连接钱包并铸造','buy.soldout':'已售罄','buy.gets':'+{x} 算力',
+ 'cap':'限量 {n}','few':'仅剩 {n}','out':'已售罄','faucet':'领取测试 USDT','tnet':'BSC 测试网 · 测试代币无实际价值',
+ 'mine.h':'我的节点','mine.count':'节点','mine.stLabel':'已质押','mine.dayLabel':'每日积分','mine.ptsLabel':'积分','mine.availLabel':'余额','mine.hp':'算力','mine.day':'每日积分','mine.reb':'返佣 USDT',
+ 'mine.stakeAll':'全部质押','mine.unstakeAll':'全部解押','mine.stake':'质押即将开放','mine.claim':'兑换平台币 · 发币后开放','mine.div':'领取分红',
+ 'mine.link':'连接钱包，生成你的邀请链接','mine.note':'邀请好友铸造，10% USDT 秒到账。','mine.api':'签名即可质押，零 gas。积分 1:1 兑换平台币。','mine.soon':'质押即将开放。','mine.empty':'还没有节点。去铸造第一个吧。','reb.line':'已赚 {r} USDT · 邀请 {n} 人','ref.bound':'邀请人 {a}',
+ 'eco.h':'即将登陆 CowCow','eco.soon':'敬请期待',
+ 'dark.h':'节点怎么赚','dark.sub':'挖矿加分红，两条收益线。',
+ 'pool.h':'节点矿池','pool.sub':'只有质押的节点才能挖。','pool.pre':'每算力每天','pool.prev':'9.43 积分','pool.y1':'正式期首年产出','pool.y1v':'1,500 万','pool.rule':'产出规则','pool.rulev':'每年减半','pool.cv':'积分 → 平台币','pool.note':'解押即停止计算。节点可自由转让。',
+ 'fee.h':'手续费分红','fee.sub':'每一笔交易，分成三份。',
+ 'F':[['节点','按算力分给质押节点'],['销毁','永久移出流通'],['金库','投入增长与营销']],
+ 'alloc.h':'代币分配 · 1 亿','A':[['节点矿池','质押挖出，首年 1500 万，每年减半'],['生态与空投','空投、盲盒奖励、活动'],['平台金库','增长与生态建设'],['团队','锁仓 12 个月'],['流动性','300 万枚 + 15 万 U 开池'],['市场','上所、合作、推广']],
+ 'tbl.h':'节点一览','th':['节点','限量','价格','算力','每日积分','分红占比'],'tbl.note':'每日积分 = 算力 × 9.43',
+ 'step1':'授权 USDT','step2':'支付','step3':'铸造 NFT','mt.buying':'铸造中…','mt.ok':'属于你了。','msub.ok':'{n} × {q} · +{hp} 算力','again':'再铸一个','toMine':'查看我的节点','mt.fail':'交易未完成','viewTx':'查看交易','close':'关闭',
+ 'err.rejected':'已取消','err.balance':'USDT 余额不足','err.gas':'BNB 不够付 gas','err.noWallet':'未检测到钱包。请在 TP、币安钱包或 MetaMask 中打开。','err.generic':'出了点问题，请重试。',
+ 'stake.sign':'在钱包里签个名，零 gas。','stake.ok':'已质押，积分开始累计。','unstake.ok':'已解押。','copied':'已复制','demo':'© 2026 CowCow · BNB Chain'
+});
+Object.assign(I.en,{
+ 'nav.sale':'Mint','nav.wp':'Whitepaper','conn':'Connect',
+ 'hero.chip':'Node sale live · while supply lasts','hero.h':'Every Holo NFT is <em>a node.</em>','hero.sub':'Stake to mine. Share every fee. Be early.','hero.cta':'Mint now','hero.wp':'Read the whitepaper',
+ 'f1':'tiers','f2':'nodes. Never more.','f3v':'Day 1','f3':'mining starts',
+ 'pick.h':'Pick your node','pick.sub':'Higher tier, more hashpower.',
+ 'info.supply':'Supply','info.hp':'Hashpower','info.daily':'Daily points','info.share':'Dividend share','pcs':'',
+ 'buy.qty':'Quantity','buy.ref':'Referrer (optional)','buy.pay':'Total','buy.note':'Pay in USDT. Minted on-chain. Stake instantly.','buy.btn':'Approve & mint','buy.connect':'Connect & mint','buy.soldout':'Sold out','buy.gets':'+{x} hashpower',
+ 'cap':'{n} total','few':'Only {n} left','out':'Sold out','faucet':'Get test USDT','tnet':'BSC Testnet · test tokens only',
+ 'mine.h':'Your nodes','mine.count':'Nodes','mine.stLabel':'Staked','mine.dayLabel':'Per day','mine.ptsLabel':'Points','mine.availLabel':'Balance','mine.hp':'Hashpower','mine.day':'Per day','mine.reb':'Referral USDT',
+ 'mine.stakeAll':'Stake all','mine.unstakeAll':'Unstake all','mine.stake':'Staking soon','mine.claim':'Convert to tokens · at launch','mine.div':'Claim dividends',
+ 'mine.link':'Connect to get your referral link','mine.note':'Invite friends. Earn 10% in USDT, instantly.','mine.api':'Stake with a signature. Zero gas. Points convert 1:1.','mine.soon':'Staking opens soon.','mine.empty':'No nodes yet. Mint your first.','reb.line':'{r} USDT earned · {n} referrals','ref.bound':'Referred by {a}',
+ 'eco.h':'Coming to CowCow','eco.soon':'Soon',
+ 'dark.h':'How nodes earn','dark.sub':'Mining plus dividends. Two streams.',
+ 'pool.h':'Mining pool','pool.sub':'Only staked nodes mine.','pool.pre':'Per hashpower / day','pool.prev':'9.43 pts','pool.y1':'Year-1 emission','pool.y1v':'15M','pool.rule':'Emission','pool.rulev':'Halves yearly','pool.cv':'Points → tokens','pool.note':'Unstaking stops rewards. Nodes are freely transferable.',
+ 'fee.h':'Fee dividends','fee.sub':'Every trade, split three ways.',
+ 'F':[['Nodes','Shared by staked hashpower'],['Burn','Gone for good'],['Treasury','Growth and marketing']],
+ 'alloc.h':'Tokenomics · 100M','A':[['Node mining','Mined by staking; 15M in year 1, halving yearly'],['Ecosystem & airdrops','Airdrops, blind-box rewards, events'],['Treasury','Growth and ecosystem'],['Team','12-month lock'],['Liquidity','3M tokens + 150K U at launch'],['Marketing','Listings, partnerships, promotion']],
+ 'tbl.h':'Node tiers','th':['Node','Supply','Price','Hashpower','Daily points','Dividend share'],'tbl.note':'Daily points = hashpower × 9.43',
+ 'tiers':['Genesis','Super','Community'],
+ 'step1':'Approve USDT','step2':'Pay','step3':'Mint NFT','mt.buying':'Minting…','mt.ok':'It\'s yours.','msub.ok':'{n} × {q} · +{hp} hashpower','again':'Mint another','toMine':'View your nodes','mt.fail':'Didn\'t go through','viewTx':'View transaction','close':'Close',
+ 'err.rejected':'Cancelled','err.balance':'Not enough USDT','err.gas':'Not enough BNB for gas','err.noWallet':'No wallet found. Open in TokenPocket, Binance Wallet or MetaMask.','err.generic':'Something went wrong. Try again.',
+ 'stake.sign':'Sign in your wallet. No gas.','stake.ok':'Staked. Points are rolling.','unstake.ok':'Unstaked.','copied':'Copied','demo':'© 2026 CowCow · BNB Chain'
+});
 const route=()=>{const wp=location.hash==='#whitepaper';$('#vSale').hidden=wp;$('#vWp').hidden=!wp;$('#tSale').classList.toggle('on',!wp);$('#tWp').classList.toggle('on',wp);window.scrollTo(0,0)};
 addEventListener('hashchange',route);
 
