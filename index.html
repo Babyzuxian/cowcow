@@ -365,7 +365,7 @@ input:disabled{background:rgba(255,255,255,.6);color:var(--mute)}
       <button class="btn" type="button" disabled data-i="mine.div"></button>
     </div>
     <div class="inv"><code id="link"></code><button class="btn" id="copy" type="button" data-i="copy"></button></div>
-    <p class="note" data-i="mine.soon"></p><p class="note" style="margin-top:4px" data-i="mine.note"></p>
+    <p class="note" id="mineTip" data-i="mine.soon"></p><p class="note" id="rebLine" hidden></p><p class="note" style="margin-top:4px" data-i="mine.note"></p>
   </div>
 </div></section>
 
@@ -647,7 +647,9 @@ Object.assign(I.zh,{
  'buy.ref':'邀请人地址（选填）','buy.refph':'0x…','ref.bound':'已绑定邀请人 {a}','buy.paused':'认购已暂停','buy.closed':'暂未开放',
  'mine.hp':'总算力','mine.day':'每日积分（质押后）','mine.reb':'累计返佣（USDT）','mine.stake':'质押（即将开放）',
  'mine.soon':'质押与预挖积分将在后台服务上线后开放。你的节点 NFT 已经在链上，到时直接质押即可。',
- 'mt.fail':'交易未完成','close':'关闭','viewTx':'在区块浏览器查看交易','loadingMine':'正在读取链上数据…'
+ 'mt.fail':'交易未完成','close':'关闭','viewTx':'在区块浏览器查看交易','loadingMine':'正在读取链上数据…',
+ 'mine.stakeAll':'质押全部节点 NFT','mine.unstakeAll':'解除全部质押','stake.sign':'请在钱包里签名（不花 gas）','stake.ok':'质押成功，开始挖积分','unstake.ok':'已解除质押','mine.ptsLabel':'累计积分','mine.availLabel':'平台币余额','mine.stLabel':'已质押算力','mine.dayLabel':'每日积分',
+ 'mine.api':'质押只需钱包签名，不花 gas。质押后积分按秒累计，平台币发行时 1:1 兑换。','reb.line':'累计返佣 {r} USDT · 直推 {n} 人','err.api':'服务器暂时连不上，请稍后再试','frozen':'账户已冻结，请联系客服'
 });
 Object.assign(I.en,{
  'tnet':'BSC Testnet · test tokens have no value','faucet':'Get 10,000 test USDT','faucet.ok':'Test USDT received',
@@ -656,10 +658,14 @@ Object.assign(I.en,{
  'buy.ref':'Referrer address (optional)','buy.refph':'0x…','ref.bound':'Referrer bound: {a}','buy.paused':'Sale paused','buy.closed':'Not open yet',
  'mine.hp':'Total hashpower','mine.day':'Daily points (once staked)','mine.reb':'Referral rewards (USDT)','mine.stake':'Stake (coming soon)',
  'mine.soon':'Staking and pre-mined points open once the backend service is live. Your node NFTs are already on-chain and ready to stake.',
- 'mt.fail':'Transaction not completed','close':'Close','viewTx':'View transaction on explorer','loadingMine':'Reading on-chain data…'
+ 'mt.fail':'Transaction not completed','close':'Close','viewTx':'View transaction on explorer','loadingMine':'Reading on-chain data…',
+ 'mine.stakeAll':'Stake all node NFTs','mine.unstakeAll':'Unstake all','stake.sign':'Sign in your wallet (no gas)','stake.ok':'Staked. Points are accruing','unstake.ok':'Unstaked','mine.ptsLabel':'Points earned','mine.availLabel':'Token balance','mine.stLabel':'Staked hashpower','mine.dayLabel':'Daily points',
+ 'mine.api':'Staking only needs a wallet signature, no gas. Points accrue every second and convert 1:1 into the platform token at launch.','reb.line':'Referral rewards {r} USDT · {n} direct referrals','err.api':'Server unavailable, please try again later','frozen':'Account frozen, please contact support'
 });
 const CFG=Object.assign({chainId:97,chainHex:'0x61',chainName:'BNB Smart Chain Testnet',rpc:'https://bsc-testnet-rpc.publicnode.com',explorer:'https://testnet.bscscan.com',
- ipo:'0xBc1A5B0B4256bf49F743ce1Cb113F4df963C329F',usdt:'0xf503f531da85BeE2459046f203e09911115E0793',multicall:'0xcA11bde05977b3631167028862bE2a173976CA11',testnet:true},window.COWCOW_CFG||{});
+ ipo:'0xBc1A5B0B4256bf49F743ce1Cb113F4df963C329F',usdt:'0xf503f531da85BeE2459046f203e09911115E0793',multicall:'0xcA11bde05977b3631167028862bE2a173976CA11',testnet:true,
+ api:'https://45-77-181-246.sslip.io'  // 后端地址，例如 https://api.你的域名.com ；留空则不显示质押和积分
+},window.COWCOW_CFG||{});
 const E=window.ethers,ZERO='0x0000000000000000000000000000000000000000';
 const IPO_ABI=['function getTiers() view returns (tuple(uint128 price,uint32 cap,uint32 sold,bool active)[3])','function buy(uint8 tier,uint256 qty,address referrer)','function referrerOf(address) view returns (address)','function rebateOf(address) view returns (uint256)','function maxPerTx() view returns (uint16)','function paused() view returns (bool)','function nextTokenId() view returns (uint256)','function ownerOf(uint256) view returns (address)','function tierOf(uint256) view returns (uint8)',
  'error SoldOut()','error TierInactive()','error InvalidQty()','error InvalidTier()','error EnforcedPause()','error ERC721NonexistentToken(uint256)'];
@@ -667,7 +673,7 @@ const ERC_ABI=['function balanceOf(address) view returns (uint256)','function al
 const MC_ABI=['function aggregate3(tuple(address target,bool allowFailure,bytes callData)[] calls) view returns (tuple(bool success,bytes returnData)[])'];
 const rp=new E.JsonRpcProvider(CFG.rpc,CFG.chainId,{staticNetwork:true});
 const ipoR=new E.Contract(CFG.ipo,IPO_ABI,rp),usdtR=new E.Contract(CFG.usdt,ERC_ABI,rp);
-let account=null,signer=null,refBound=ZERO,rebate=0n,paused=false,mineLoading=false;
+let account=null,signer=null,refBound=ZERO,rebate=0n,paused=false,mineLoading=false,api=null,apiAt=0,stakeBusy=false;const API=CFG.api?CFG.api.replace(/\/$/,''):'';
 const short=a=>a.slice(0,6)+'…'+a.slice(-4),toU=x=>Number(E.formatUnits(x,18));
 let toastT;function toast(m){const el=$('#toast');el.textContent=m;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,3200)}
 function errMsg(e){if(!e)return t('err.generic');
@@ -688,6 +694,10 @@ async function multi(fn,args){const iface=ipoR.interface,out=[];
   return out}catch(e){const o=[];for(const a of args){try{o.push(await ipoR[fn](a))}catch(x){o.push(null)}}return o}}
 
 async function loadMine(){if(!account||mineLoading)return;mineLoading=true;
+ if(API){try{const r=await fetch(API+'/api/user/'+account);if(!r.ok)throw new Error();api=await r.json();apiAt=Date.now();
+   owned.length=0;[0,1,2].forEach(i=>{const cs=api.cards.filter(c=>c.tier===i);if(cs.length)owned.push({i,q:cs.length,st:cs.filter(c=>c.staked).length})});
+   [rebate,refBound]=await Promise.all([ipoR.rebateOf(account),ipoR.referrerOf(account)]);
+   mineLoading=false;renderMine();renderRef();return}catch(e){console.warn('api',e);api=null}}
  try{const n=Number(await ipoR.nextTokenId())-1,ids=Array.from({length:n},(_,k)=>k+1);
   const owners=await multi('ownerOf',ids),mineIds=ids.filter((id,k)=>owners[k]&&owners[k].toLowerCase()===account.toLowerCase());
   const tiers=await multi('tierOf',mineIds),cnt=[0,0,0];tiers.forEach(x=>{if(x!==null)cnt[Number(x)]++});
@@ -712,10 +722,25 @@ async function connect(silent){const eth=window.ethereum;if(!eth){if(!silent)toa
 if(window.ethereum&&window.ethereum.on){window.ethereum.on('accountsChanged',()=>location.reload());window.ethereum.on('chainChanged',()=>location.reload())}
 $('#conn').addEventListener('click',()=>{if(!account)connect(false)});
 
+function renderPtsTick(){if(!api)return;const v=Number(api.phase==='live'?api.available:api.points)+Number(api.perDay)*(Date.now()-apiAt)/86400000;$('#mPts').textContent=v.toLocaleString('en-US',{minimumFractionDigits:4,maximumFractionDigits:4})}
+setInterval(renderPtsTick,1000);
 function renderMine(){const n=owned.reduce((a,o)=>a+o.q,0),hp=owned.reduce((a,o)=>a+o.q*T[o.i].hp,0);
- $('#mCount').textContent=n;$('#mSt').textContent=f1(hp);$('#mDay').textContent=f1(day(hp));$('#mPts').textContent=f1(toU(rebate));
- $('#owned').innerHTML=mineLoading?`<div class="empty">${t('loadingMine')}</div>`:owned.length?owned.flatMap(o=>Array.from({length:Math.min(o.q,8)},()=>card(T[o.i],o.i,'div',false))).join(''):`<div class="empty">${t('mine.empty')}</div>`;
- $('#stake').disabled=true;$('#stake').textContent=t('mine.stake')}
+ const labs=$$('#mineSec .stat span');
+ if(api){labs[1].textContent=t('mine.stLabel');labs[2].textContent=t('mine.dayLabel');labs[3].textContent=api.phase==='live'?t('mine.availLabel'):t('mine.ptsLabel');
+  $('#mCount').textContent=n;$('#mSt').textContent=f1(api.stakedHashpower);$('#mDay').textContent=f1(Number(api.perDay));renderPtsTick();
+  $('#rebLine').textContent=t('reb.line',{r:f1(toU(rebate)),n:api.directCount});$('#rebLine').hidden=false;$('#mineTip').textContent=t('mine.api');
+  const anyFree=api.cards.some(c=>!c.staked);$('#stake').disabled=stakeBusy||!api.cards.length||api.status==='frozen';$('#stake').textContent=api.status==='frozen'?t('frozen'):(anyFree||!api.cards.length)?t('mine.stakeAll'):t('mine.unstakeAll')}
+ else{$('#mCount').textContent=n;$('#mSt').textContent=f1(hp);$('#mDay').textContent=f1(day(hp));$('#mPts').textContent=f1(toU(rebate));$('#stake').disabled=true;$('#stake').textContent=t('mine.stake')}
+ $('#owned').innerHTML=mineLoading?`<div class="empty">${t('loadingMine')}</div>`:owned.length?owned.flatMap(o=>Array.from({length:Math.min(o.q,8)},(_,k)=>card(T[o.i],o.i,'div',k<o.st))).join(''):`<div class="empty">${t('mine.empty')}</div>`}
+$('#stake').addEventListener('click',async()=>{if(!api||!account||stakeBusy)return;
+ const free=api.cards.filter(c=>!c.staked),action=free.length?'stake':'unstake',ids=(free.length?free:api.cards).map(c=>c.tokenId);
+ stakeBusy=true;renderMine();
+ try{const m=await (await fetch(`${API}/api/stake/message?address=${account}&action=${action}&tokenIds=${ids.join(',')}`)).json();
+  toast(t('stake.sign'));const sig=await signer.signMessage(m.message);
+  const r=await fetch(API+'/api/stake',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({address:account,action,tokenIds:ids,ts:m.ts,signature:sig})});
+  const b=await r.json();if(!r.ok)throw new Error(b.error||t('err.api'));toast(action==='stake'?t('stake.ok'):t('unstake.ok'))}
+ catch(e){toast(e.code==='ACTION_REJECTED'||e.code===4001?t('err.rejected'):(e.message||t('err.api')))}
+ stakeBusy=false;await loadMine()});
 
 function renderQty(){const c=T[sel],left=c.cap-c.sold;
  $('#qty').textContent=qty;$('#total').textContent=fmt(qty*c.p)+' U';$('#gets').textContent=t('buy.gets',{x:f1(qty*c.hp)});
@@ -752,7 +777,7 @@ $('#form').addEventListener('submit',async e=>{e.preventDefault();
   lis[2].className='done';
  }catch(err){const cur=lis.find(l=>l.className==='doing');if(cur)cur.className='';modalState('fail',errMsg(err),hash);return}
  try{localStorage.removeItem('cowcow-ref')}catch(x){}
- await loadTiers();await loadMine();
+ await loadTiers();await loadMine();if(API)setTimeout(loadMine,8000);
  lastBuy.done=true;$('#steps').hidden=true;$('#flip').hidden=false;modalState('ok',null,hash);renderModal();
  await wait(120);$('#inner').classList.add('go');await wait(900);$('#acts').hidden=false;$('#acts').style.display='flex'});
 
