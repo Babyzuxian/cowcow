@@ -643,7 +643,8 @@ $('#wpBody').addEventListener('click',e=>{const b=e.target.closest('button');if(
 Object.assign(I.zh,{
  'tnet':'BSC 测试网 · 测试币没有价值，仅用于体验','faucet':'领取 10,000 测试 USDT','faucet.ok':'测试 USDT 已到账',
  'err.noWallet':'没有检测到钱包，请用 TP、币安钱包或 MetaMask 的 DApp 浏览器打开本页','err.rejected':'你取消了操作','err.balance':'USDT 余额不足','err.ref':'邀请人地址格式不对',
- 'err.SoldOut':'该档剩余数量不足','err.TierInactive':'该档暂未开放','err.InvalidQty':'数量超出单笔上限','err.EnforcedPause':'认购已暂停','err.generic':'交易失败，请稍后重试','err.chain':'请在钱包里切换到 BSC 测试网',
+ 'err.SoldOut':'该档剩余数量不足','err.TierInactive':'该档暂未开放','err.InvalidQty':'数量超出单笔上限','err.EnforcedPause':'认购已暂停','err.generic':'交易失败，请稍后重试',
+ 'err.gas':'钱包里的 BNB 不够付手续费（gas）','err.chain':'请在钱包里切换到 BSC 测试网',
  'buy.ref':'邀请人地址（选填）','buy.refph':'0x…','ref.bound':'已绑定邀请人 {a}','buy.paused':'认购已暂停','buy.closed':'暂未开放',
  'mine.hp':'总算力','mine.day':'每日积分（质押后）','mine.reb':'累计返佣（USDT）','mine.stake':'质押（即将开放）',
  'mine.soon':'质押与预挖积分将在后台服务上线后开放。你的节点 NFT 已经在链上，到时直接质押即可。',
@@ -654,7 +655,8 @@ Object.assign(I.zh,{
 Object.assign(I.en,{
  'tnet':'BSC Testnet · test tokens have no value','faucet':'Get 10,000 test USDT','faucet.ok':'Test USDT received',
  'err.noWallet':'No wallet found. Open this page in the DApp browser of TokenPocket, Binance Wallet or MetaMask.','err.rejected':'You cancelled the request','err.balance':'Not enough USDT','err.ref':'Invalid referrer address',
- 'err.SoldOut':'Not enough left in this tier','err.TierInactive':'This tier is not open yet','err.InvalidQty':'Quantity is over the per-purchase limit','err.EnforcedPause':'The sale is paused','err.generic':'Transaction failed, please try again','err.chain':'Please switch your wallet to BSC Testnet',
+ 'err.SoldOut':'Not enough left in this tier','err.TierInactive':'This tier is not open yet','err.InvalidQty':'Quantity is over the per-purchase limit','err.EnforcedPause':'The sale is paused','err.generic':'Transaction failed, please try again',
+ 'err.gas':'Not enough BNB in your wallet for gas','err.chain':'Please switch your wallet to BSC Testnet',
  'buy.ref':'Referrer address (optional)','buy.refph':'0x…','ref.bound':'Referrer bound: {a}','buy.paused':'Sale paused','buy.closed':'Not open yet',
  'mine.hp':'Total hashpower','mine.day':'Daily points (once staked)','mine.reb':'Referral rewards (USDT)','mine.stake':'Stake (coming soon)',
  'mine.soon':'Staking and pre-mined points open once the backend service is live. Your node NFTs are already on-chain and ready to stake.',
@@ -677,11 +679,19 @@ let account=null,signer=null,refBound=ZERO,rebate=0n,paused=false,mineLoading=fa
 const short=a=>a.slice(0,6)+'…'+a.slice(-4),toU=x=>Number(E.formatUnits(x,18));
 let toastT;function toast(m){const el=$('#toast');el.textContent=m;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,3200)}
 function errMsg(e){if(!e)return t('err.generic');
+ if(e.code===4001||e.code==='ACTION_REJECTED')return t('err.rejected');
+ const raw=[e.message,e.shortMessage,e.error&&e.error.message,e.info&&e.info.error&&e.info.error.message,e.data&&e.data.message].filter(Boolean).join(' ');
+ if(/user (rejected|denied|cancel)|rejected by user|取消|拒绝/i.test(raw))return t('err.rejected');
+ if(/insufficient funds|gas required exceeds|余额不足以支付/i.test(raw))return t('err.gas');
  if(e.code==='ACTION_REJECTED'||e.code===4001||(e.info&&e.info.error&&e.info.error.code===4001))return t('err.rejected');
  const n=e.revert&&e.revert.name;if(n&&I.zh['err.'+n])return t('err.'+n);
  const d=e.data||(e.info&&e.info.error&&e.info.error.data);if(d&&typeof d==='string'){try{const p=ipoR.interface.parseError(d);if(p&&I.zh['err.'+p.name])return t('err.'+p.name)}catch(x){}}
+ if(/coalesce|internal json-rpc|unknown error/i.test(raw))return t('err.generic');
  return e.shortMessage||e.message||t('err.generic')}
 
+async function sendTx(to,data,gasLimit){const p={from:account,to,data};if(gasLimit)p.gas='0x'+gasLimit.toString(16);
+ return await window.ethereum.request({method:'eth_sendTransaction',params:[p]})}
+async function waitTx(h){return await rp.waitForTransaction(h,1,240000)}
 async function loadTiers(){try{
  const [ts,mx,pz]=await Promise.all([ipoR.getTiers(),ipoR.maxPerTx(),ipoR.paused()]);
  ts.forEach((x,i)=>{T[i].raw=x.price;T[i].p=toU(x.price);T[i].cap=Number(x.cap);T[i].sold=Number(x.sold);T[i].active=x.active});
@@ -766,14 +776,18 @@ $('#form').addEventListener('submit',async e=>{e.preventDefault();
  lis.forEach(l=>l.className='');$('#steps').hidden=false;$('#flip').hidden=true;$('#acts').hidden=true;$('#acts').style.display='';$('#inner').classList.remove('go');
  modalState('run');$('#modal').hidden=false;renderModal();
  let hash=null;
- try{const usdtW=new E.Contract(CFG.usdt,ERC_ABI,signer),ipoW=new E.Contract(CFG.ipo,IPO_ABI,signer);
+ try{
   lis[0].className='doing';
-  if((await usdtR.allowance(account,CFG.ipo))<cost){const tx=await usdtW.approve(CFG.ipo,cost);await tx.wait()}
+  if((await usdtR.allowance(account,CFG.ipo))<cost){
+   const h=await sendTx(CFG.usdt,usdtR.interface.encodeFunctionData('approve',[CFG.ipo,cost]),80000n);
+   const r0=await waitTx(h);if(!r0||r0.status!==1)throw new Error(t('err.generic'));
+   for(let k=0;k<12&&(await usdtR.allowance(account,CFG.ipo))<cost;k++)await wait(1500)}
   lis[0].className='done';lis[1].className='doing';
-  await ipoW.buy.staticCall(i,q,refAddr);
-  const tx=await ipoW.buy(i,q,refAddr);hash=tx.hash;
+  await ipoR.buy.staticCall(i,q,refAddr,{from:account});
+  let gl;try{gl=(await ipoR.buy.estimateGas(i,q,refAddr,{from:account}))*13n/10n}catch(x){gl=BigInt(180000+120000*q)}
+  hash=await sendTx(CFG.ipo,ipoR.interface.encodeFunctionData('buy',[i,q,refAddr]),gl);
   lis[1].className='done';lis[2].className='doing';
-  const rc=await tx.wait();if(!rc||rc.status!==1)throw new Error(t('err.generic'));
+  const rc=await waitTx(hash);if(!rc||rc.status!==1)throw new Error(t('err.generic'));
   lis[2].className='done';
  }catch(err){const cur=lis.find(l=>l.className==='doing');if(cur)cur.className='';modalState('fail',errMsg(err),hash);return}
  try{localStorage.removeItem('cowcow-ref')}catch(x){}
@@ -784,7 +798,7 @@ $('#form').addEventListener('submit',async e=>{e.preventDefault();
 $('#faucet').hidden=!CFG.testnet;
 $('#faucet').addEventListener('click',async()=>{if(!account&&!(await connect(false)))return;
  const b=$('#faucet');b.disabled=true;
- try{await ensureChain(window.ethereum);const tx=await new E.Contract(CFG.usdt,ERC_ABI,signer).mint(account,E.parseUnits('10000',18));await tx.wait();toast(t('faucet.ok'))}
+ try{await ensureChain(window.ethereum);const h=await sendTx(CFG.usdt,usdtR.interface.encodeFunctionData('mint',[account,E.parseUnits('10000',18)]),120000n);await waitTx(h);toast(t('faucet.ok'))}
  catch(err){toast(errMsg(err))}b.disabled=false});
 
 $('#copy').addEventListener('click',async()=>{if(!account){connect(false);return}try{await navigator.clipboard.writeText($('#link').textContent);$('#copy').textContent=t('copied')}catch(err){$('#copy').textContent=t('copyfail')}setTimeout(()=>{$('#copy').textContent=t('copy')},1600)});
